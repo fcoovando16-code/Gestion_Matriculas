@@ -5,8 +5,14 @@ const btnCancelar = document.getElementById("btnCancelar");
 const mensaje = document.getElementById("mensaje");
 const listaMatriculas = document.getElementById("listaMatriculas");
 const busqueda = document.getElementById("busqueda");
+const rut = document.getElementById("rut");
+const correo = document.getElementById("correo");
 
 let matriculaEditandoId = null;
+
+rut.addEventListener("blur", () => {
+  rut.value = formatearRut(rut.value);
+});
 
 btnGuardar.addEventListener("click", async () => {
   const anioAcademico = document.getElementById("anioAcademico").value;
@@ -26,6 +32,13 @@ btnGuardar.addEventListener("click", async () => {
     listaMatriculas.innerHTML = "";
     return;
   }
+
+  if (!correo.checkValidity()) {
+    mensaje.textContent = "Debe ingresar un correo electronico valido.";
+    return;
+  }
+
+  rut.value = matricula.rut;
 
   try {
     const url = matriculaEditandoId ? `/matriculas/${matriculaEditandoId}` : "/matriculas";
@@ -95,7 +108,7 @@ async function cargarMatriculas(filtro = "") {
         RUT/ID: ${matricula.rut}<br>
         Correo: ${matricula.correo}<br>
         Carrera: ${matricula.carrera}<br>
-        Anio academico: ${matricula.anio_academico}<br>
+        A&ntilde;o academico: ${matricula.anio_academico}<br>
         Jornada: ${matricula.jornada}<br>
         Estado: ${matricula.estado_matricula}
         <div class="acciones">
@@ -140,7 +153,7 @@ function obtenerDatosFormulario() {
   return {
     nombre: document.getElementById("nombre").value.trim(),
     apellido: document.getElementById("apellido").value.trim(),
-    rut: document.getElementById("rut").value.trim(),
+    rut: formatearRut(document.getElementById("rut").value),
     correo: document.getElementById("correo").value.trim(),
     carrera: document.getElementById("carrera").value,
     anio_academico: parseInt(document.getElementById("anioAcademico").value, 10),
@@ -174,4 +187,22 @@ function limpiarFormulario() {
   document.getElementById("anioAcademico").value = "";
   document.getElementById("jornada").value = "";
   document.getElementById("estadoMatricula").value = "";
+}
+
+function limpiarRut(valor) {
+  return valor.replace(/[^0-9kK]/g, "").toUpperCase();
+}
+
+function formatearRut(valor) {
+  const rutLimpio = limpiarRut(valor);
+
+  if (rutLimpio.length < 2) {
+    return valor.trim();
+  }
+
+  const cuerpo = rutLimpio.slice(0, -1);
+  const digito = rutLimpio.slice(-1);
+  const cuerpoConPuntos = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+  return `${cuerpoConPuntos}-${digito}`;
 }

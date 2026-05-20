@@ -5,7 +5,7 @@ const mysql = require("mysql2");
 const app = express();
 const PORT = 3000;
 const ANIO_MINIMO = 2020;
-const ANIO_MAXIMO = 2030;
+const ANIO_MAXIMO = new Date().getFullYear();
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -40,7 +40,7 @@ function validarMatricula(datos) {
     return "Todos los campos son obligatorios.";
   }
 
-  if (!datos.correo.includes("@")) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(datos.correo)) {
     return "Debe ingresar un correo valido.";
   }
 
@@ -49,6 +49,24 @@ function validarMatricula(datos) {
   }
 
   return "";
+}
+
+function limpiarRut(rut) {
+  return rut.replace(/[^0-9kK]/g, "").toUpperCase();
+}
+
+function formatearRut(rut) {
+  const rutLimpio = limpiarRut(rut);
+
+  if (rutLimpio.length < 2) {
+    return rut.trim();
+  }
+
+  const cuerpo = rutLimpio.slice(0, -1);
+  const digito = rutLimpio.slice(-1);
+  const cuerpoConPuntos = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+  return `${cuerpoConPuntos}-${digito}`;
 }
 
 app.post("/matriculas", (req, res) => {
@@ -70,6 +88,8 @@ app.post("/matriculas", (req, res) => {
     estado_matricula
   } = req.body;
 
+  const rutFormateado = formatearRut(rut);
+
   conexion.query("SELECT id FROM carreras WHERE nombre = ?", [carrera], (errorCarrera, carreras) => {
     if (errorCarrera || carreras.length === 0) {
       res.status(500).json({ mensaje: "Error al obtener la carrera" });
@@ -86,13 +106,13 @@ app.post("/matriculas", (req, res) => {
       correo = VALUES(correo)
     `;
 
-    conexion.query(sqlEstudiante, [nombre, apellido, rut, correo], (errorEstudiante) => {
+    conexion.query(sqlEstudiante, [nombre, apellido, rutFormateado, correo], (errorEstudiante) => {
       if (errorEstudiante) {
         res.status(500).json({ mensaje: "Error al guardar el estudiante" });
         return;
       }
 
-      conexion.query("SELECT id FROM estudiantes WHERE rut = ?", [rut], (errorRut, estudiantes) => {
+      conexion.query("SELECT id FROM estudiantes WHERE rut = ?", [rutFormateado], (errorRut, estudiantes) => {
         if (errorRut || estudiantes.length === 0) {
           res.status(500).json({ mensaje: "Error al obtener el estudiante" });
           return;
@@ -141,6 +161,8 @@ app.put("/matriculas/:id", (req, res) => {
     estado_matricula
   } = req.body;
 
+  const rutFormateado = formatearRut(rut);
+
   conexion.query("SELECT id FROM carreras WHERE nombre = ?", [carrera], (errorCarrera, carreras) => {
     if (errorCarrera || carreras.length === 0) {
       res.status(500).json({ mensaje: "Error al obtener la carrera" });
@@ -166,7 +188,7 @@ app.put("/matriculas/:id", (req, res) => {
 
         conexion.query(
           sqlEstudiante,
-          [nombre, apellido, rut, correo, estudianteId],
+          [nombre, apellido, rutFormateado, correo, estudianteId],
           (errorEstudiante) => {
             if (errorEstudiante) {
               res.status(500).json({ mensaje: "Error al actualizar el estudiante" });
@@ -215,8 +237,10 @@ app.delete("/matriculas/:id", (req, res) => {
 });
 
 app.get("/matriculas", (req, res) => {
-  const busqueda = req.query.busqueda || "";
+  const busqueda = (req.query.busqueda || "").trim();
+  const rutBuscado = limpiarRut(busqueda);
   const filtro = `%${busqueda}%`;
+  const filtroRut = rutBuscado ? `%${rutBuscado}%` : "###";
   const sql = `
     SELECT
       m.id,
@@ -231,11 +255,11 @@ app.get("/matriculas", (req, res) => {
     FROM matriculas m
     INNER JOIN estudiantes e ON m.estudiante_id = e.id
     INNER JOIN carreras c ON m.carrera_id = c.id
-    WHERE e.rut LIKE ? OR e.nombre LIKE ?
+    WHERE ? = "" OR REPLACE(REPLACE(e.rut, ".", ""), "-", "") LIKE ? OR e.nombre LIKE ?
     ORDER BY m.id DESC
   `;
 
-  conexion.query(sql, [filtro, filtro], (error, resultados) => {
+  conexion.query(sql, [busqueda, filtroRut, filtro], (error, resultados) => {
     if (error) {
       res.status(500).json({ mensaje: "Error al obtener las matriculas" });
       return;
