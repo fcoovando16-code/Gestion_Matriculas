@@ -13,7 +13,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const conexion = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "TU_CLAVE",
+  password: "1234",
   database: "gestion_matriculas"
 });
 
