@@ -9,6 +9,8 @@ const rut = document.getElementById("rut");
 const correo = document.getElementById("correo");
 
 let matriculaEditandoId = null;
+const anioMinimo = 2020;
+const anioMaximo = new Date().getFullYear();
 
 rut.addEventListener("blur", () => {
   rut.value = formatearRut(rut.value);
@@ -35,6 +37,11 @@ btnGuardar.addEventListener("click", async () => {
 
   if (!correo.checkValidity()) {
     mensaje.textContent = "Debe ingresar un correo electronico valido.";
+    return;
+  }
+
+  if (matricula.anio_academico < anioMinimo || matricula.anio_academico > anioMaximo) {
+    mensaje.textContent = "Debe ingresar un año valido.";
     return;
   }
 

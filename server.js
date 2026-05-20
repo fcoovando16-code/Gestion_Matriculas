@@ -45,7 +45,7 @@ function validarMatricula(datos) {
   }
 
   if (datos.anio_academico < ANIO_MINIMO || datos.anio_academico > ANIO_MAXIMO) {
-    return `El anio academico debe estar entre ${ANIO_MINIMO} y ${ANIO_MAXIMO}.`;
+    return "Debe ingresar un año valido.";
   }
 
   return "";
