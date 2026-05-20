@@ -1,0 +1,14 @@
+{
+  "name": "gestion-matriculas",
+  "version": "1.0.0",
+  "description": "Aplicacion web para gestionar matriculas de estudiantes.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.3",
+    "mysql2": "^3.9.2"
+  }
+}

@@ -1,0 +1,99 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f5f9;
+  margin: 0;
+  padding: 0;
+}
+
+.contenedor {
+  width: min(650px, calc(100% - 32px));
+  margin: 35px auto;
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.12);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1f3b57;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  border: 1px solid #cfd8e3;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.botones,
+.acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background-color: #2f6fa3;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+button:hover {
+  background-color: #24577f;
+}
+
+.acciones button {
+  padding: 9px;
+}
+
+.btn-eliminar {
+  background-color: #b83b3b;
+}
+
+.btn-eliminar:hover {
+  background-color: #8f2e2e;
+}
+
+#mensaje {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #444;
+}
+
+#listaMatriculas {
+  margin-top: 15px;
+}
+
+.matricula {
+  background-color: #f8fafc;
+  border: 1px solid #d7dee7;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+@media (max-width: 520px) {
+  .botones,
+  .acciones {
+    flex-direction: column;
+  }
+}

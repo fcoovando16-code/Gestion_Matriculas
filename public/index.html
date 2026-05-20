@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion de Matriculas</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <main class="contenedor">
+    <h1>Gestion de Matriculas de Estudiantes</h1>
+
+    <label for="nombre">Nombre del estudiante:</label>
+    <input type="text" id="nombre" placeholder="Ingrese nombre">
+
+    <label for="apellido">Apellido del estudiante:</label>
+    <input type="text" id="apellido" placeholder="Ingrese apellido">
+
+    <label for="rut">RUT o identificador:</label>
+    <input type="text" id="rut" placeholder="Ingrese RUT o identificador">
+
+    <label for="correo">Correo electronico:</label>
+    <input type="email" id="correo" placeholder="Ingrese correo electronico">
+
+    <label for="carrera">Carrera:</label>
+    <select id="carrera">
+      <option value="">Seleccione una carrera</option>
+      <option value="Ingenieria en Sistemas">Ingenieria en Sistemas</option>
+      <option value="Ingenieria Civil Industrial">Ingenieria Civil Industrial</option>
+      <option value="Analista Programador">Analista Programador</option>
+      <option value="Administracion de Empresas">Administracion de Empresas</option>
+      <option value="Contador Auditor">Contador Auditor</option>
+    </select>
+
+    <label for="anioAcademico">Año de matricula:</label>
+    <input type="number" id="anioAcademico" placeholder="Ejemplo: 2026">
+
+    <label for="jornada">Jornada:</label>
+    <select id="jornada">
+      <option value="">Seleccione jornada</option>
+      <option value="Diurna">Diurna</option>
+      <option value="Vespertina">Vespertina</option>
+      <option value="Online">Online</option>
+    </select>
+
+    <label for="estadoMatricula">Estado de matricula:</label>
+    <select id="estadoMatricula">
+      <option value="">Seleccione estado</option>
+      <option value="Pendiente">Pendiente</option>
+      <option value="Matriculado">Matriculado</option>
+      <option value="En revision">En revision</option>
+    </select>
+
+    <div class="botones">
+      <button id="btnGuardar" type="button">Guardar matricula</button>
+      <button id="btnMostrar" type="button">Mostrar matriculas</button>
+    </div>
+
+    <label for="busqueda">Buscar por RUT o nombre:</label>
+    <input type="text" id="busqueda" placeholder="Ingrese RUT o nombre">
+
+    <div class="botones">
+      <button id="btnBuscar" type="button">Buscar</button>
+      <button id="btnCancelar" type="button">Cancelar edicion</button>
+    </div>
+
+    <div id="mensaje"></div>
+    <div id="listaMatriculas"></div>
+  </main>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
