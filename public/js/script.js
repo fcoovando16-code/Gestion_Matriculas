@@ -72,7 +72,9 @@ btnMostrar.addEventListener("click", () => {
 });
 
 btnBuscar.addEventListener("click", () => {
-  cargarMatriculas(busqueda.value.trim());
+  const filtro = busqueda.value.trim();
+  cargarMatriculas(filtro);
+  busqueda.value = "";
 });
 
 btnCancelar.addEventListener("click", () => {
